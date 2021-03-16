@@ -1,0 +1,383 @@
+MariaDB [(none)]> create database movies;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use movies;
+Database changed
+MariaDB [movies]> create table actor(
+    -> act_id int,
+    -> act_name varchar(20),
+    -> sex char(1),
+    -> primary key(act_id));
+Query OK, 0 rows affected (0.299 sec)
+
+MariaDB [movies]> create table director(
+    -> dir_id int,
+    -> dir_name varchar(20),
+    -> phone bigint,
+    -> primary key(dir_id));
+Query OK, 0 rows affected (0.283 sec)
+
+MariaDB [movies]> create table movie(
+    -> mov_id int,
+    -> title varchar(20),
+    -> year int,
+    -> lang varchar(10),
+    -> dir_id int,
+    -> primary key(mov_id),
+    -> foreign key(dir_id) references director(dir_id) on delete cascade);
+Query OK, 0 rows affected (0.302 sec)
+
+MariaDB [movies]> create table caste(
+    -> act_id int,
+    -> mov_id int,
+    -> role varchar(5),
+    -> primary key(act_id,mov_id),
+    -> foreign key(act_id) references actor(act_id) on delete cascade,
+    -> foreign key(mov_id) references movie(mov_id) on delete cascade);
+Query OK, 0 rows affected (0.429 sec)
+
+MariaDB [movies]> create table rating(
+    -> mov_id int,
+    -> star int,
+    -> primary key(mov_id),
+    -> foreign key(mov_id) references movie(mov_id) on delete cascade);
+Query OK, 0 rows affected (0.243 sec)
+
+MariaDB [movies]> show tables;
++------------------+
+| Tables_in_movies |
++------------------+
+| actor            |
+| caste            |
+| director         |
+| movie            |
+| rating           |
++------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [movies]> desc actor;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| act_id   | int(11)     | NO   | PRI | NULL    |       |
+| act_name | varchar(20) | YES  |     | NULL    |       |
+| sex      | char(1)     | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.101 sec)
+
+MariaDB [movies]> insert into actor values(1,'ishita','F');
+Query OK, 1 row affected (0.271 sec)
+
+MariaDB [movies]> insert into actor values(2,'chintu','F');
+Query OK, 1 row affected (0.096 sec)
+
+MariaDB [movies]> insert into actor values(3,'aarohan','F');
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [movies]> insert into actor values(4,'monu','F');
+Query OK, 1 row affected (0.083 sec)
+
+MariaDB [movies]> insert into actor values(5,'tiki','F');
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [movies]> select * from actors;
+ERROR 1146 (42S02): Table 'movies.actors' doesn't exist
+MariaDB [movies]> select * from actor;
++--------+----------+------+
+| act_id | act_name | sex  |
++--------+----------+------+
+|      1 | ishita   | F    |
+|      2 | chintu   | F    |
+|      3 | aarohan  | F    |
+|      4 | monu     | F    |
+|      5 | tiki     | F    |
++--------+----------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [movies]> desc director;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dir_id   | int(11)     | NO   | PRI | NULL    |       |
+| dir_name | varchar(20) | YES  |     | NULL    |       |
+| phone    | bigint(20)  | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.035 sec)
+
+MariaDB [movies]> insert into director values(10,'Hitchcock',897654321);
+Query OK, 1 row affected (0.087 sec)
+
+MariaDB [movies]> insert into director values(11,'steven',897654321);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [movies]> insert into director values(12,'jacky',897654321);
+Query OK, 1 row affected (0.055 sec)
+
+MariaDB [movies]> insert into director values(13,'roshan',897654321);
+Query OK, 1 row affected (0.084 sec)
+
+MariaDB [movies]> insert into director values(14,'kipling',897654321);
+Query OK, 1 row affected (0.067 sec)
+
+MariaDB [movies]> insert into director values(15,'sapna',897654321);
+Query OK, 1 row affected (0.081 sec)
+
+MariaDB [movies]> select * from director;
++--------+-----------+-----------+
+| dir_id | dir_name  | phone     |
++--------+-----------+-----------+
+|     10 | Hitchcock | 897654321 |
+|     11 | steven    | 897654321 |
+|     12 | jacky     | 897654321 |
+|     13 | roshan    | 897654321 |
+|     14 | kipling   | 897654321 |
+|     15 | sapna     | 897654321 |
++--------+-----------+-----------+
+6 rows in set (0.000 sec)
+
+MariaDB [movies]> desc movie;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| mov_id | int(11)     | NO   | PRI | NULL    |       |
+| title  | varchar(20) | YES  |     | NULL    |       |
+| year   | int(11)     | YES  |     | NULL    |       |
+| lang   | varchar(10) | YES  |     | NULL    |       |
+| dir_id | int(11)     | YES  | MUL | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.124 sec)
+
+MariaDB [movies]> insert into movie values(100,'life',2017,'eng',10);
+Query OK, 1 row affected (0.091 sec)
+
+MariaDB [movies]> insert into movie values(101,'this',1998,'eng',10);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [movies]> insert into movie values(102,'iron',1998,'eng',11);
+Query OK, 1 row affected (0.067 sec)
+
+MariaDB [movies]> insert into movie values(103,'kola',2001,'eng',11);
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [movies]> insert into movie values(104,'the',2005,'eng',13);
+Query OK, 1 row affected (0.067 sec)
+
+MariaDB [movies]> select * from movie;
++--------+-------+------+------+--------+
+| mov_id | title | year | lang | dir_id |
++--------+-------+------+------+--------+
+|    100 | life  | 2017 | eng  |     10 |
+|    101 | this  | 1998 | eng  |     10 |
+|    102 | iron  | 1998 | eng  |     11 |
+|    103 | kola  | 2001 | eng  |     11 |
+|    104 | the   | 2005 | eng  |     13 |
++--------+-------+------+------+--------+
+5 rows in set (0.000 sec)
+
+MariaDB [movies]> desc rating;
++--------+---------+------+-----+---------+-------+
+| Field  | Type    | Null | Key | Default | Extra |
++--------+---------+------+-----+---------+-------+
+| mov_id | int(11) | NO   | PRI | NULL    |       |
+| star   | int(11) | YES  |     | NULL    |       |
++--------+---------+------+-----+---------+-------+
+2 rows in set (0.079 sec)
+
+MariaDB [movies]> insert into rating values(100,5);
+Query OK, 1 row affected (0.094 sec)
+
+MariaDB [movies]> insert into rating values(101,4);
+Query OK, 1 row affected (0.067 sec)
+
+MariaDB [movies]> insert into rating values(102,3);
+Query OK, 1 row affected (0.111 sec)
+
+MariaDB [movies]> insert into rating values(103,3);
+Query OK, 1 row affected (0.080 sec)
+
+MariaDB [movies]> insert into rating values(104,2);
+Query OK, 1 row affected (0.096 sec)
+
+MariaDB [movies]> insert into rating values(105,1);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`movies`.`rating`, CONSTRAINT `rating_ibfk_1` FOREIGN KEY (`mov_id`) REFERENCES `movie` (`mov_id`) ON DELETE CASCADE)
+MariaDB [movies]> select * from rating;
++--------+------+
+| mov_id | star |
++--------+------+
+|    100 |    5 |
+|    101 |    4 |
+|    102 |    3 |
+|    103 |    3 |
+|    104 |    2 |
++--------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [movies]> desc cast;
+ERROR 1146 (42S02): Table 'movies.cast' doesn't exist
+MariaDB [movies]> desc caste;
++--------+------------+------+-----+---------+-------+
+| Field  | Type       | Null | Key | Default | Extra |
++--------+------------+------+-----+---------+-------+
+| act_id | int(11)    | NO   | PRI | NULL    |       |
+| mov_id | int(11)    | NO   | PRI | NULL    |       |
+| role   | varchar(5) | YES  |     | NULL    |       |
++--------+------------+------+-----+---------+-------+
+3 rows in set (0.114 sec)
+
+MariaDB [movies]> insert into caste values(1,100,'lead');
+Query OK, 1 row affected (0.076 sec)
+
+MariaDB [movies]> insert into caste values(1,101,'lead');
+Query OK, 1 row affected (0.095 sec)
+
+MariaDB [movies]> insert into caste values(1,102,'lead');
+Query OK, 1 row affected (0.093 sec)
+
+MariaDB [movies]> insert into caste values(2,102,'lead');
+Query OK, 1 row affected (0.086 sec)
+
+MariaDB [movies]> insert into caste values(3,103,'lead');
+Query OK, 1 row affected (0.171 sec)
+
+MariaDB [movies]> insert into caste values(2,103,'lead');
+Query OK, 1 row affected (0.092 sec)
+
+MariaDB [movies]> insert into caste values(2,104,'lead');
+Query OK, 1 row affected (0.065 sec)
+
+MariaDB [movies]> insert into caste values(4,101,'lead');
+Query OK, 1 row affected (0.092 sec)
+
+MariaDB [movies]> select * from caste;
++--------+--------+------+
+| act_id | mov_id | role |
++--------+--------+------+
+|      1 |    100 | lead |
+|      1 |    101 | lead |
+|      1 |    102 | lead |
+|      2 |    102 | lead |
+|      2 |    103 | lead |
+|      2 |    104 | lead |
+|      3 |    103 | lead |
+|      4 |    101 | lead |
++--------+--------+------+
+8 rows in set (0.000 sec)
+
+MariaDB [movies]> select * from movie;
++--------+-------+------+------+--------+
+| mov_id | title | year | lang | dir_id |
++--------+-------+------+------+--------+
+|    100 | life  | 2017 | eng  |     10 |
+|    101 | this  | 1998 | eng  |     10 |
+|    102 | iron  | 1998 | eng  |     11 |
+|    103 | kola  | 2001 | eng  |     11 |
+|    104 | the   | 2005 | eng  |     13 |
++--------+-------+------+------+--------+
+5 rows in set (0.000 sec)
+
+MariaDB [movies]> select * from director;
++--------+-----------+-----------+
+| dir_id | dir_name  | phone     |
++--------+-----------+-----------+
+|     10 | Hitchcock | 897654321 |
+|     11 | steven    | 897654321 |
+|     12 | jacky     | 897654321 |
+|     13 | roshan    | 897654321 |
+|     14 | kipling   | 897654321 |
+|     15 | sapna     | 897654321 |
++--------+-----------+-----------+
+6 rows in set (0.000 sec)
+
+MariaDB [movies]> select m.title from movie m, director d where m.dir_id=d.dir_id and d.dir_name='Hitchcock';
++-------+
+| title |
++-------+
+| life  |
+| this  |
++-------+
+2 rows in set (0.001 sec)
+
+
+MariaDB [movies]> select m.title from movie m,caste c
+    -> where m.mov_id=c.mov_id and c.act_id in(select act_id from caste group by act_id having count(*)>2);
++-------+
+| title |
++-------+
+| life  |
+| this  |
+| iron  |
+| iron  |
+| kola  |
+| the   |
++-------+
+6 rows in set (0.251 sec)
+
+MariaDB [movies]> select distinct a.act_id from actor a
+    -> join caste c on a.act_id=c.act_id
+    -> join movie m on m.mov_id=c.mov_id
+    -> where m.year not between 2000 and 2015;
++--------+
+| act_id |
++--------+
+|      1 |
+|      4 |
+|      2 |
++--------+
+3 rows in set (0.026 sec)
+			
+				OR
+
+MariaDB [movies]> select distinct act_id from actor natural join caste natural join movie where year not between 2000 and 2015;
++--------+
+| act_id |
++--------+
+|      1 |
+|      4 |
+|      2 |
++--------+
+3 rows in set (0.001 sec)
+
+MariaDB [movies]>select title,max(star) from movie inner join rating using(mov_id)
+    -> group by title having count(star)>0 order by title;
++-------+-----------+
+| title | max(star) |
++-------+-----------+
+| iron  |         3 |
+| kola  |         3 |
+| life  |         5 |
+| the   |         2 |
+| this  |         4 |
++-------+-----------+
+5 rows in set (0.097 sec)
+
+				OR
+
+MariaDB [movies]> select title,max(star) from movie natural join rating
+    -> group by title having count(star)>0 order by title;
++-------+-----------+
+| title | max(star) |
++-------+-----------+
+| iron  |         3 |
+| kola  |         3 |
+| life  |         5 |
+| the   |         2 |
+| this  |         4 |
++-------+-----------+
+5 rows in set (0.001 sec)
+
+MariaDB [movies]> update rating set star=5 where
+    -> mov_id in(select mov_id from movie where dir_id in(select dir_id from director where dir_name='steven'));
+Query OK, 2 rows affected (0.096 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+MariaDB [movies]> select * from rating;
++--------+------+
+| mov_id | star |
++--------+------+
+|    100 |    5 |
+|    101 |    4 |
+|    102 |    5 |
+|    103 |    5 |
+|    104 |    2 |
++--------+------+
+5 rows in set (0.000 sec)

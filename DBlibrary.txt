@@ -1,0 +1,372 @@
+
+MariaDB [library]> create table publisher(
+    -> pub_name varchar(20),
+    -> address varchar(20),
+    -> phone bigint,
+    -> primary key(pub_name));
+Query OK, 0 rows affected (0.366 sec)
+
+MariaDB [library]> create table books(
+    -> book_id int,
+    -> title varchar(20),
+    -> pub_name varchar(20),
+    -> pub_year year,
+    -> primary key(book_id),
+    -> foreign key(pub_name) references publisher(pub_name));
+Query OK, 0 rows affected (0.339 sec)
+
+MariaDB [library]> create table branch(
+    -> branch_id int,
+    -> branch_name varchar(20),
+    -> address varchar(20),
+    -> primary key(branch_id));
+Query OK, 0 rows affected (0.268 sec)
+
+MariaDB [library]> create table author(
+    -> book_id int,
+    -> author_name varchar(20),
+    -> primary key(book_id,author_name),
+    -> foreign key(book_id) references books(book_id) on delete cascade);
+Query OK, 0 rows affected (0.303 sec)
+
+MariaDB [library]> create table book_copies(
+    -> book_id int,
+    -> branch_id int,
+    -> no_of_copies int,
+    -> primary key(book_id,branch_id),
+    -> foreign key(book_id) references books(book_id) on delete cascade,
+    -> foreign key(branch_id) references branch(branch_id) on delete cascade);
+Query OK, 0 rows affected (0.357 sec)
+
+MariaDB [library]> create table lending(
+    -> book_id int,
+    -> branch_id int,
+    -> card_no int,
+    -> date_out date,
+    -> due_date date,
+    -> primary key(book_id,branch_id,card_no),
+    -> foreign key(book_id) references books(book_id) on delete cascade,
+    -> foreign key(branch_id) references branch(branch_id) on delete cascade);
+Query OK, 0 rows affected (0.331 sec)
+
+MariaDB [library]> insert into publisher values('ruppa','bangalore',8897654321);
+Query OK, 1 row affected (0.148 sec)
+
+MariaDB [library]> insert into publisher values('scolastic','bangalore',8897654321);
+Query OK, 1 row affected (0.103 sec)
+
+MariaDB [library]> insert into publisher values('mgt-hills','chennai',8897654321);
+Query OK, 1 row affected (0.101 sec)
+
+MariaDB [library]> insert into publisher values('brown','mangalore',8897654321);
+Query OK, 1 row affected (0.089 sec)
+
+MariaDB [library]> insert into publisher values('rose','andra',8897654321);
+Query OK, 1 row affected (0.075 sec)
+
+MariaDB [library]> select * from publisher;
++-----------+-----------+------------+
+| pub_name  | address   | phone      |
++-----------+-----------+------------+
+| brown     | mangalore | 8897654321 |
+| mgt-hills | chennai   | 8897654321 |
+| rose      | andra     | 8897654321 |
+| ruppa     | bangalore | 8897654321 |
+| scolastic | bangalore | 8897654321 |
++-----------+-----------+------------+
+5 rows in set (0.069 sec)
+
+MariaDB [library]> desc branch;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| branch_id   | int(11)     | NO   | PRI | NULL    |       |
+| branch_name | varchar(20) | YES  |     | NULL    |       |
+| address     | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.104 sec)
+
+MariaDB [library]> insert into branch values(10,'rr-nagar','bangalore');
+Query OK, 1 row affected (0.069 sec)
+
+MariaDB [library]> insert into branch values(11,'rt-nagar','mangalore');
+Query OK, 1 row affected (0.078 sec)
+
+MariaDB [library]> insert into branch values(12,'richmond','bangalore');
+Query OK, 1 row affected (0.075 sec)
+
+MariaDB [library]> insert into branch values(13,'topping','chennai');
+Query OK, 1 row affected (0.067 sec)
+
+MariaDB [library]> insert into branch values(14,'harward','mumbai');
+Query OK, 1 row affected (0.065 sec)
+
+MariaDB [library]> select * from branch;
++-----------+-------------+-----------+
+| branch_id | branch_name | address   |
++-----------+-------------+-----------+
+|        10 | rr-nagar    | bangalore |
+|        11 | rt-nagar    | mangalore |
+|        12 | richmond    | bangalore |
+|        13 | topping     | chennai   |
+|        14 | harward     | mumbai    |
++-----------+-------------+-----------+
+5 rows in set (0.000 sec)
+
+MariaDB [library]> insert into author values(1,'ishita');
+Query OK, 1 row affected (0.081 sec)
+
+MariaDB [library]> insert into author values(2,'sapna');
+Query OK, 1 row affected (0.084 sec)
+
+MariaDB [library]> insert into author values(3,'roshani');
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [library]> insert into author values(4,'aruna');
+Query OK, 1 row affected (0.093 sec)
+
+MariaDB [library]> insert into author values(5,'devi');
+Query OK, 1 row affected (0.066 sec)
+
+MariaDB [library]> select * from author;
++---------+-------------+
+| book_id | author_name |
++---------+-------------+
+|       1 | ishita      |
+|       2 | sapna       |
+|       3 | roshani     |
+|       4 | aruna       |
+|       5 | devi        |
++---------+-------------+
+5 rows in set (0.000 sec)
+
+
+MariaDB [library]> select * from books;
++---------+-------+-----------+----------+
+| book_id | title | pub_name  | pub_year |
++---------+-------+-----------+----------+
+|       1 | dbms  | brown     |     2017 |
+|       2 | ade   | brown     |     2017 |
+|       3 | cns   | ruppa     |     2016 |
+|       4 | dsa   | scolastic |     2016 |
+|       5 | caed  | scolastic |     2016 |
++---------+-------+-----------+----------+
+5 rows in set (0.000 sec)
+
+MariaDB [library]> desc book_copies;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| book_id      | int(11) | NO   | PRI | NULL    |       |
+| branch_id    | int(11) | NO   | PRI | NULL    |       |
+| no_of_copies | int(11) | YES  |     | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+3 rows in set (0.032 sec)
+
+MariaDB [library]> insert into book_copies values(1,10,10);
+Query OK, 1 row affected (0.190 sec)
+
+MariaDB [library]> insert into book_copies values(1,11,5);
+Query OK, 1 row affected (0.052 sec)
+
+MariaDB [library]> insert into book_copies values(2,12,5);
+Query OK, 1 row affected (0.069 sec)
+
+MariaDB [library]> insert into book_copies values(3,13,5);
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [library]> insert into book_copies values(4,14,5);
+Query OK, 1 row affected (0.116 sec)
+
+MariaDB [library]> insert into book_copies values(5,14,5);
+Query OK, 1 row affected (0.138 sec)
+
+MariaDB [library]> insert into book_copies values(2,13,10);
+Query OK, 1 row affected (0.069 sec)
+
+MariaDB [library]> insert into book_copies values(3,10,10);
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [library]> select * from book_copies;
++---------+-----------+--------------+
+| book_id | branch_id | no_of_copies |
++---------+-----------+--------------+
+|       1 |        10 |           10 |
+|       1 |        11 |            5 |
+|       2 |        12 |            5 |
+|       2 |        13 |           10 |
+|       3 |        10 |           10 |
+|       3 |        13 |            5 |
+|       4 |        14 |            5 |
+|       5 |        14 |            5 |
++---------+-----------+--------------+
+8 rows in set (0.001 sec)
+
+MariaDB [library]> insert into lending values(1,10,101,'2017-01-10','2017-03-10');
+Query OK, 1 row affected (0.097 sec)
+
+MariaDB [library]> insert into lending values(2,10,101,'2017-01-10','2017-03-10');
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [library]> insert into lending values(2,12,101,'2017-02-10','2017-03-10');
+Query OK, 1 row affected (0.076 sec)
+
+MariaDB [library]> insert into lending values(3,13,101,'2017-03-10','2017-06-10');
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [library]> insert into lending values(4,13,102,'2017-04-10','2017-06-10');
+Query OK, 1 row affected (0.026 sec)
+
+MariaDB [library]> insert into lending values(5,14,102,'2017-04-10','2017-06-10');
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [library]> select * from lending;
++---------+-----------+---------+------------+------------+
+| book_id | branch_id | card_no | date_out   | due_date   |
++---------+-----------+---------+------------+------------+
+|       1 |        10 |     101 | 2017-01-10 | 2017-03-10 |
+|       2 |        10 |     101 | 2017-01-10 | 2017-03-10 |
+|       2 |        12 |     101 | 2017-02-10 | 2017-03-10 |
+|       3 |        13 |     101 | 2017-03-10 | 2017-06-10 |
+|       4 |        13 |     102 | 2017-04-10 | 2017-06-10 |
+|       5 |        14 |     102 | 2017-04-10 | 2017-06-10 |
++---------+-----------+---------+------------+------------+
+6 rows in set (0.000 sec)
+
+MariaDB [library]> select
+    -> b.book_id,b.title,b.pub_name,
+    -> c.no_of_copies,
+    -> br.branch_id
+    -> from books b, book_copies c, branch br
+    -> where b.book_id=c.book_id and c.branch_id=br.branch_id;
++---------+-------+-----------+--------------+-----------+
+| book_id | title | pub_name  | no_of_copies | branch_id |
++---------+-------+-----------+--------------+-----------+
+|       1 | dbms  | brown     |           10 |        10 |
+|       1 | dbms  | brown     |            5 |        11 |
+|       2 | ade   | brown     |            5 |        12 |
+|       2 | ade   | brown     |           10 |        13 |
+|       3 | cns   | ruppa     |           10 |        10 |
+|       3 | cns   | ruppa     |            5 |        13 |
+|       4 | dsa   | scolastic |            5 |        14 |
+|       5 | caed  | scolastic |            5 |        14 |
++---------+-------+-----------+--------------+-----------+
+8 rows in set (0.114 sec)
+
+MariaDB [library]> select card_no from lending
+    -> where date_out between '2017-01-01' and '2017-07-01'
+    -> group by card_no
+    -> having count(*)>3;
++---------+
+| card_no |
++---------+
+|     101 |
++---------+
+1 row in set (0.101 sec)
+
+
+MariaDB [library]> create table book1(
+    -> book_id int,title varchar(20),pub_year year,
+    -> primary key(pub_year));
+Query OK, 0 rows affected (0.370 sec)
+
+MariaDB [library]> alter table book1 partition by range(pub_year)
+    -> (partition p0 values less than (1999),
+    -> partition p1 values less than (2005),
+    -> partition p2 values less than maxvalue);
+Query OK, 0 rows affected (1.652 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [library]> insert into book1 values(1,'abc',1888);
+Query OK, 1 row affected, 1 warning (0.093 sec)
+
+MariaDB [library]> insert into book1 values(2,'abc','2006');
+Query OK, 1 row affected (0.100 sec)
+
+MariaDB [library]> insert into book1 values(3,'abc','2007');
+Query OK, 1 row affected (0.073 sec)
+
+MariaDB [library]> insert into book1 values(4,'abc','1889');
+ERROR 1062 (23000): Duplicate entry '0000' for key 'PRIMARY'
+MariaDB [library]> insert into book1 values(4,'abc','2000');
+Query OK, 1 row affected (0.065 sec)
+
+MariaDB [library]> insert into book1 values(5,'abc','2008');
+Query OK, 1 row affected (0.066 sec)
+
+MariaDB [library]> select * form book1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'form book1' at line 1
+MariaDB [library]> select * from book1;
++---------+-------+----------+
+| book_id | title | pub_year |
++---------+-------+----------+
+|       1 | abc   |     0000 |
+|       4 | abc   |     2000 |
+|       2 | abc   |     2006 |
+|       3 | abc   |     2007 |
+|       5 | abc   |     2008 |
++---------+-------+----------+
+5 rows in set (0.000 sec)
+
+MariaDB [library]> select partition_name,table_rows from information_schema.partitions where table_name='book1';
++----------------+------------+
+| partition_name | table_rows |
++----------------+------------+
+| p0             |          1 |
+| p1             |          1 |
+| p2             |          3 |
++----------------+------------+
+3 rows in set (0.148 sec)
+MariaDB [library]> create view def as
+    -> select b.book_id,b.title,sum(c.no_of_copies)
+    -> from books b,book_copies c where b.book_id=c.book_id group by b.book_id;
+Query OK, 0 rows affected (0.192 sec)
+
+MariaDB [library]> select * from def;
++---------+-------+---------------------+
+| book_id | title | sum(c.no_of_copies) |
++---------+-------+---------------------+
+|       2 | ade   |                  15 |
+|       3 | cns   |                  15 |
+|       4 | dsa   |                   5 |
+|       5 | caed  |                   5 |
++---------+-------+---------------------+
+4 rows in set (0.077 sec)
+
+MariaDB [library]>delete from books where book_id=1;
+Query OK, 1 row affected (0.198 sec)
+
+MariaDB [library]> select * from books;
++---------+-------+-----------+----------+
+| book_id | title | pub_name  | pub_year |
++---------+-------+-----------+----------+
+|       2 | ade   | brown     |     2017 |
+|       3 | cns   | ruppa     |     2016 |
+|       4 | dsa   | scolastic |     2016 |
+|       5 | caed  | scolastic |     2016 |
++---------+-------+-----------+----------+
+4 rows in set (0.000 sec)
+
+MariaDB [library]> select * from book_copies;
++---------+-----------+--------------+
+| book_id | branch_id | no_of_copies |
++---------+-----------+--------------+
+|       2 |        12 |            5 |
+|       2 |        13 |           10 |
+|       3 |        10 |           10 |
+|       3 |        13 |            5 |
+|       4 |        14 |            5 |
+|       5 |        14 |            5 |
++---------+-----------+--------------+
+6 rows in set (0.000 sec)
+MariaDB [library]> select * from author;
++---------+-------------+
+| book_id | author_name |
++---------+-------------+
+|       2 | sapna       |
+|       3 | roshani     |
+|       4 | aruna       |
+|       5 | devi        |
++---------+-------------+
+4 rows in set (0.000 sec)
+

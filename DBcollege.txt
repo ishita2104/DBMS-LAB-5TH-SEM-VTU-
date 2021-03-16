@@ -1,0 +1,326 @@
+MariaDB [college]> create table student(
+    -> usn varchar(20),
+    -> name varchar (20),
+    -> address varchar (20),
+    -> phone bigint,
+    -> sex char(1),
+    -> primary key(usn));
+Query OK, 0 rows affected (0.461 sec)
+
+MariaDB [college]> create table semsec(
+    -> ssid int,
+    -> sem int,
+    -> sec char(1),
+    -> primary key(ssid));
+Query OK, 0 rows affected (0.465 sec)
+
+MariaDB [college]> create table class(
+    -> usn varchar(20),
+    -> ssid int,
+    -> primary key(usn),
+    -> foreign key(usn) references student(usn),
+    -> foreign key(ssid) references semsec(ssid));
+Query OK, 0 rows affected (0.628 sec)
+
+MariaDB [college]> create table course(
+    -> subcode int,
+    -> title varchar(20),
+    -> sem int,
+    -> credits int,
+    -> primary key(subcode));
+Query OK, 0 rows affected (0.230 sec)
+
+MariaDB [college]> create table iamarks(
+    -> usn varchar(20),
+    -> subcode int,
+    -> ssid int,
+    -> test1 int,test2 int,test3 int ,final int,
+    -> primary key(usn,subcode,ssid),
+    -> foreign key(usn) references student(usn),
+    -> foreign key(subcode) references course(subcode),
+    -> foreign key(ssid) references semsec(ssid));
+Query OK, 0 rows affected (0.463 sec)
+
+MariaDB [college]> show tables;
++-------------------+
+| Tables_in_college |
++-------------------+
+| class             |
+| course            |
+| iamarks           |
+| semsec            |
+| student           |
++-------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [college]> desc student;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| usn     | varchar(20) | NO   | PRI | NULL    |       |
+| name    | varchar(20) | YES  |     | NULL    |       |
+| address | varchar(20) | YES  |     | NULL    |       |
+| phone   | bigint(20)  | YES  |     | NULL    |       |
+| sex     | char(1)     | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.119 sec)
+
+MariaDB [college]> insert into student values('1bi15cs101','ishita','bangalore',852369741,'F');
+Query OK, 1 row affected (0.102 sec)
+
+MariaDB [college]> insert into student values('1bi15cs102','chintu','bangalore',852369741,'M');
+Query OK, 1 row affected (0.105 sec)
+
+MariaDB [college]> insert into student values('1bi15cs103','reshma','bangalore',852369741,'F');
+Query OK, 1 row affected (0.022 sec)
+
+MariaDB [college]> insert into student values('1bi15cs104','monu','bangalore',852369741,'M');
+Query OK, 1 row affected (0.108 sec)
+
+MariaDB [college]> insert into student values('1bi15cs105','aarushi','bangalore',852369741,'F');
+Query OK, 1 row affected (0.108 sec)
+
+MariaDB [college]> select * from student;
++------------+---------+-----------+-----------+------+
+| usn        | name    | address   | phone     | sex  |
++------------+---------+-----------+-----------+------+
+| 1bi15cs101 | ishita  | bangalore | 852369741 | F    |
+| 1bi15cs102 | chintu  | bangalore | 852369741 | M    |
+| 1bi15cs103 | reshma  | bangalore | 852369741 | F    |
+| 1bi15cs104 | monu    | bangalore | 852369741 | M    |
+| 1bi15cs105 | aarushi | bangalore | 852369741 | F    |
++------------+---------+-----------+-----------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> desc semsec;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| ssid  | int(11) | NO   | PRI | NULL    |       |
+| sem   | int(11) | YES  |     | NULL    |       |
+| sec   | char(1) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+3 rows in set (0.114 sec)
+
+MariaDB [college]> insert into semsec values(100,8,'A');
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [college]> insert into semsec values(101,8,'B');
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [college]> insert into semsec values(102,4,'C');
+Query OK, 1 row affected (0.073 sec)
+
+MariaDB [college]> insert into semsec values(103,4,'C');
+Query OK, 1 row affected (0.072 sec)
+
+MariaDB [college]> insert into semsec values(104,4,'C');
+Query OK, 1 row affected (0.072 sec)
+
+MariaDB [college]> select * from semsec;
++------+------+------+
+| ssid | sem  | sec  |
++------+------+------+
+|  100 |    8 | A    |
+|  101 |    8 | B    |
+|  102 |    4 | C    |
+|  103 |    4 | C    |
+|  104 |    4 | C    |
++------+------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> desc class;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| usn   | varchar(20) | NO   | PRI | NULL    |       |
+| ssid  | int(11)     | YES  | MUL | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.128 sec)
+
+MariaDB [college]> insert into class values('1bi15cs101',100);
+Query OK, 1 row affected (0.105 sec)
+
+MariaDB [college]> insert into class values('1bi15cs102',101);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [college]> insert into class values('1bi15cs103',102);
+Query OK, 1 row affected (0.035 sec)
+
+MariaDB [college]> insert into class values('1bi15cs104',103);
+Query OK, 1 row affected (0.057 sec)
+
+MariaDB [college]> insert into class values('1bi15cs105',104);
+Query OK, 1 row affected (0.065 sec)
+
+MariaDB [college]> select * from class;
++------------+------+
+| usn        | ssid |
++------------+------+
+| 1bi15cs101 |  100 |
+| 1bi15cs102 |  101 |
+| 1bi15cs103 |  102 |
+| 1bi15cs104 |  103 |
+| 1bi15cs105 |  104 |
++------------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> desc course;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| subcode | int(11)     | NO   | PRI | NULL    |       |
+| title   | varchar(20) | YES  |     | NULL    |       |
+| sem     | int(11)     | YES  |     | NULL    |       |
+| credits | int(11)     | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.102 sec)
+
+MariaDB [college]> insert into course(1,'DBMS',8,4);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1,'DBMS',8,4)' at line 1
+MariaDB [college]> insert into course values(1,'DBMS',8,4);
+Query OK, 1 row affected (0.079 sec)
+
+MariaDB [college]> insert into course values(2,'web',8,4);
+Query OK, 1 row affected (0.073 sec)
+
+MariaDB [college]> insert into course values(3,'cn',8,4);
+Query OK, 1 row affected (0.066 sec)
+
+MariaDB [college]> insert into course values(4,'iot',8,4);
+Query OK, 1 row affected (0.065 sec)
+
+MariaDB [college]> insert into course values(5,'ml',8,4);
+Query OK, 1 row affected (0.095 sec)
+
+MariaDB [college]> select * from course;
++---------+-------+------+---------+
+| subcode | title | sem  | credits |
++---------+-------+------+---------+
+|       1 | DBMS  |    8 |       4 |
+|       2 | web   |    8 |       4 |
+|       3 | cn    |    8 |       4 |
+|       4 | iot   |    8 |       4 |
+|       5 | ml    |    8 |       4 |
++---------+-------+------+---------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> desc iamarks;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| usn     | varchar(20) | NO   | PRI | NULL    |       |
+| subcode | int(11)     | NO   | PRI | NULL    |       |
+| ssid    | int(11)     | NO   | PRI | NULL    |       |
+| test1   | int(11)     | YES  |     | NULL    |       |
+| test2   | int(11)     | YES  |     | NULL    |       |
+| test3   | int(11)     | YES  |     | NULL    |       |
+| final   | int(11)     | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+7 rows in set (0.114 sec)
+
+MariaDB [college]> insert into iamarks values('1bi15cs101',1,100,6,7,8,null);
+Query OK, 1 row affected (0.037 sec)
+
+MariaDB [college]> insert into iamarks values('1bi15cs101',2,100,15,17,8,null);
+Query OK, 1 row affected (0.074 sec)
+
+MariaDB [college]> insert into iamarks values('1bi15cs101',3,100,15,17,18,null);
+Query OK, 1 row affected (0.075 sec)
+
+MariaDB [college]> insert into iamarks values('1bi15cs102',4,101,15,17,18,null);
+Query OK, 1 row affected (0.094 sec)
+
+MariaDB [college]> insert into iamarks values('1bi15cs102',5,101,15,0,0,null);
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [college]> select * from iamarks;
++------------+---------+------+-------+-------+-------+-------+
+| usn        | subcode | ssid | test1 | test2 | test3 | final |
++------------+---------+------+-------+-------+-------+-------+
+| 1bi15cs101 |       1 |  100 |     6 |     7 |     8 |  NULL |
+| 1bi15cs101 |       2 |  100 |    15 |    17 |     8 |  NULL |
+| 1bi15cs101 |       3 |  100 |    15 |    17 |    18 |  NULL |
+| 1bi15cs102 |       4 |  101 |    15 |    17 |    18 |  NULL |
+| 1bi15cs102 |       5 |  101 |    15 |     0 |     0 |  NULL |
++------------+---------+------+-------+-------+-------+-------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> select s.*,ss.sem,ss.sec
+    -> from student s,semsec ss,class c
+    -> where c.usn=s.usn and c.ssid=ss.ssid and ss.sem=4 and ss.sec='C';
++------------+---------+-----------+-----------+------+------+------+
+| usn        | name    | address   | phone     | sex  | sem  | sec  |
++------------+---------+-----------+-----------+------+------+------+
+| 1bi15cs103 | reshma  | bangalore | 852369741 | F    |    4 | C    |
+| 1bi15cs104 | monu    | bangalore | 852369741 | M    |    4 | C    |
+| 1bi15cs105 | aarushi | bangalore | 852369741 | F    |    4 | C    |
++------------+---------+-----------+-----------+------+------+------+
+3 rows in set (0.001 sec)
+
+MariaDB [college]> select ss.sem,ss.sec,count(s.sex)
+    -> from semsec ss,student s,class c
+    -> where s.usn=c.usn and c.ssid=ss.ssid
+    -> group by ss.sem,ss.sec,s.sex;
++------+------+--------------+
+| sem  | sec  | count(s.sex) |
++------+------+--------------+
+|    4 | C    |            2 |
+|    4 | C    |            1 |
+|    8 | A    |            1 |
+|    8 | B    |            1 |
++------+------+--------------+
+4 rows in set (0.493 sec)
+
+
+MariaDB [college]> create  view test1_marks as
+    -> select test1,subcode,usn
+    -> from iamarks where usn='1bi15cs101';
+Query OK, 0 rows affected (0.202 sec)
+
+MariaDB [college]> select * from test1_marks;
++-------+---------+------------+
+| test1 | subcode | usn        |
++-------+---------+------------+
+|     6 |       1 | 1bi15cs101 |
+|    15 |       2 | 1bi15cs101 |
+|    15 |       3 | 1bi15cs101 |
++-------+---------+------------+
+3 rows in set (0.088 sec)
+
+MariaDB [college]> update iamarks set final=(test1+test2+test3-least(test1,test2,test3))/2;
+Query OK, 5 rows affected (0.161 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+MariaDB [college]> select * from iamarks;
++------------+---------+------+-------+-------+-------+-------+
+| usn        | subcode | ssid | test1 | test2 | test3 | final |
++------------+---------+------+-------+-------+-------+-------+
+| 1bi15cs101 |       1 |  100 |     6 |     7 |     8 |     8 |
+| 1bi15cs101 |       2 |  100 |    15 |    17 |     8 |    16 |
+| 1bi15cs101 |       3 |  100 |    15 |    17 |    18 |    18 |
+| 1bi15cs102 |       4 |  101 |    15 |    17 |    18 |    18 |
+| 1bi15cs102 |       5 |  101 |    15 |     0 |     0 |     8 |
++------------+---------+------+-------+-------+-------+-------+
+5 rows in set (0.000 sec)
+
+MariaDB [college]> select s.usn,name,subcode,final,
+    -> (case
+    -> when final between 17 and 20 then "outstanding"
+    -> when final between 12 and 16 then "avg"
+    -> else "weak"
+    -> end)as cat
+    -> from student s,semsec ss,iamarks i
+    -> where s.usn=i.usn and ss.ssid=i.ssid and sem=8 and sec in ('A','B','C');
++------------+--------+---------+-------+-------------+
+| usn        | name   | subcode | final | cat         |
++------------+--------+---------+-------+-------------+
+| 1bi15cs101 | ishita |       1 |     8 | weak        |
+| 1bi15cs101 | ishita |       2 |    16 | avg         |
+| 1bi15cs101 | ishita |       3 |    18 | outstanding |
+| 1bi15cs102 | chintu |       4 |    18 | outstanding |
+| 1bi15cs102 | chintu |       5 |     8 | weak        |
++------------+--------+---------+-------+-------------+
+5 rows in set (0.103 sec)
+
+MariaDB [college]>

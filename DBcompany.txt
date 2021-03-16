@@ -1,0 +1,410 @@
+MariaDB [(none)]> create database company;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use company
+Database changed
+MariaDB [company]> create table department(
+    -> d_no int,
+    -> d_name varchar(20),
+    -> mgssn int,
+    -> mgdate date,
+    -> primary key(d_no));
+Query OK, 0 rows affected (0.215 sec)
+
+MariaDB [company]> create table employee(
+    -> ssn int,
+    -> name varchar(20),
+    -> address varchar(20),
+    -> sex char(1),
+    -> salary int,
+    -> supssn int,
+    -> d_no int,
+    -> primary key(ssn),
+    -> foreign key(d_no) references department(d_no) on delete cascade,
+    -> foreign key(supssn) references employee(ssn) on delete cascade);
+Query OK, 0 rows affected (0.347 sec)
+
+MariaDB [company]> alter table department add foreign key(mgssn) references employee(ssn) on delete cascade;
+Query OK, 0 rows affected (1.114 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [company]> create table delocation(
+    -> d_no int,
+    -> d_loc varchar(20),
+    -> primary key(d_no,d_loc),
+    -> foreign key(d_no) references department(d_no) on delete cascade);
+Query OK, 0 rows affected (0.255 sec)
+
+MariaDB [company]> create table project(
+    -> p_no int,
+    -> p_name varchar(20),
+    -> p_loc varchar(20),
+    -> d_no int,
+    -> primary key(p_no),
+    -> foreign key(d_no) references department(d_no) on delete cascade);
+Query OK, 0 rows affected (0.384 sec)
+
+MariaDB [company]> create table works_on(
+    -> ssn int,
+    -> p_no int,
+    -> hrs int,
+    -> primary key(ssn,p_no),
+    -> foreign key(ssn) references employee(ssn) on delete cascade,
+    -> foreign key(p_no) references project (p_no) on delete cascade);
+Query OK, 0 rows affected (0.340 sec)
+
+MariaDB [company]> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| delocation        |
+| department        |
+| employee          |
+| project           |
+| works_on          |
++-------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [company]> desc department;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| d_no   | int(11)     | NO   | PRI | NULL    |       |
+| d_name | varchar(20) | YES  |     | NULL    |       |
+| mgssn  | int(11)     | YES  | MUL | NULL    |       |
+| mgdate | date        | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.124 sec)
+
+MariaDB [company]> insert into department values(1,'accounts',null,'2020-02-21');
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [company]> insert into department values(2,'cse',null,'2020-02-21');
+Query OK, 1 row affected (0.084 sec)
+
+MariaDB [company]> insert into department values(3,'ise',null,'2020-02-21');
+Query OK, 1 row affected (0.089 sec)
+
+MariaDB [company]> insert into department values(4,'ece',null,'2020-02-21');
+Query OK, 1 row affected (0.104 sec)
+
+MariaDB [company]> insert into department values(5,'civil',null,'2020-02-21');
+Query OK, 1 row affected (0.078 sec)
+
+MariaDB [company]> select * from department;
++------+----------+-------+------------+
+| d_no | d_name   | mgssn | mgdate     |
++------+----------+-------+------------+
+|    1 | accounts |  NULL | 2020-02-21 |
+|    2 | cse      |  NULL | 2020-02-21 |
+|    3 | ise      |  NULL | 2020-02-21 |
+|    4 | ece      |  NULL | 2020-02-21 |
+|    5 | civil    |  NULL | 2020-02-21 |
++------+----------+-------+------------+
+5 rows in set (0.000 sec)
+
+MariaDB [company]> desc employee;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| ssn     | int(11)     | NO   | PRI | NULL    |       |
+| name    | varchar(20) | YES  |     | NULL    |       |
+| address | varchar(20) | YES  |     | NULL    |       |
+| sex     | char(1)     | YES  |     | NULL    |       |
+| salary  | int(11)     | YES  |     | NULL    |       |
+| supssn  | int(11)     | YES  | MUL | NULL    |       |
+| d_no    | int(11)     | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+7 rows in set (0.106 sec)
+
+MariaDB [company]> insert into employee values(10,'scott','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.081 sec)
+
+MariaDB [company]> insert into employee values(11,'ishita','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [company]> insert into employee values(12,'chintu,'bangalore','F',7000000,null,5);
+    '> ';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'bangalore','F',7000000,null,5);
+'' at line 1
+MariaDB [company]> insert into employee values(12,'chintu','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.084 sec)
+
+MariaDB [company]> insert into employee values(13,'monu','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.086 sec)
+
+MariaDB [company]> insert into employee values(14,'ishvar','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [company]> insert into employee values(15,'krishna','bangalore','F',7000000,null,5);
+Query OK, 1 row affected (0.079 sec)
+
+MariaDB [company]> insert into employee values(16,'arjun','bangalore','F',7000000,null,1);
+Query OK, 1 row affected (0.094 sec)
+
+MariaDB [company]> insert into employee values(17,'rakehs','bangalore','F',7000000,null,1);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [company]> select * from employee;
++-----+---------+-----------+------+---------+--------+------+
+| ssn | name    | address   | sex  | salary  | supssn | d_no |
++-----+---------+-----------+------+---------+--------+------+
+|  10 | scott   | bangalore | F    | 7000000 |   NULL |    5 |
+|  11 | ishita  | bangalore | F    | 7000000 |   NULL |    5 |
+|  12 | chintu  | bangalore | F    | 7000000 |   NULL |    5 |
+|  13 | monu    | bangalore | F    | 7000000 |   NULL |    5 |
+|  14 | ishvar  | bangalore | F    | 7000000 |   NULL |    5 |
+|  15 | krishna | bangalore | F    | 7000000 |   NULL |    5 |
+|  16 | arjun   | bangalore | F    | 7000000 |   NULL |    1 |
+|  17 | rakehs  | bangalore | F    | 7000000 |   NULL |    1 |
++-----+---------+-----------+------+---------+--------+------+
+8 rows in set (0.000 sec)
+
+MariaDB [company]> update department set mgssn=16 where d_no=1;
+Query OK, 1 row affected (0.084 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update department set mgssn=10 where d_no=2;
+Query OK, 1 row affected (0.083 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update department set mgssn=11 where d_no=3;
+Query OK, 1 row affected (0.088 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update department set mgssn=12 where d_no=4;
+Query OK, 1 row affected (0.095 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update department set mgssn=13 where d_no=5;
+Query OK, 1 row affected (0.075 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> select *
+    ->  from department;
++------+----------+-------+------------+
+| d_no | d_name   | mgssn | mgdate     |
++------+----------+-------+------------+
+|    1 | accounts |    16 | 2020-02-21 |
+|    2 | cse      |    10 | 2020-02-21 |
+|    3 | ise      |    11 | 2020-02-21 |
+|    4 | ece      |    12 | 2020-02-21 |
+|    5 | civil    |    13 | 2020-02-21 |
++------+----------+-------+------------+
+5 rows in set (0.000 sec)
+
+MariaDB [company]> update employee set supssn=11 where ssn=10;
+Query OK, 1 row affected (0.047 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=12 where ssn=11;
+Query OK, 1 row affected (0.083 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=13 where ssn=12;
+Query OK, 1 row affected (0.076 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=14 where ssn=13;
+Query OK, 1 row affected (0.083 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=15 where ssn=14;
+Query OK, 1 row affected (0.080 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=16 where ssn=15;
+Query OK, 1 row affected (0.076 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> update employee set supssn=17 where ssn=16;
+Query OK, 1 row affected (0.084 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [company]> select * from employee;
++-----+---------+-----------+------+---------+--------+------+
+| ssn | name    | address   | sex  | salary  | supssn | d_no |
++-----+---------+-----------+------+---------+--------+------+
+|  10 | scott   | bangalore | F    | 7000000 |     11 |    5 |
+|  11 | ishita  | bangalore | F    | 7000000 |     12 |    5 |
+|  12 | chintu  | bangalore | F    | 7000000 |     13 |    5 |
+|  13 | monu    | bangalore | F    | 7000000 |     14 |    5 |
+|  14 | ishvar  | bangalore | F    | 7000000 |     15 |    5 |
+|  15 | krishna | bangalore | F    | 7000000 |     16 |    5 |
+|  16 | arjun   | bangalore | F    | 7000000 |     17 |    1 |
+|  17 | rakehs  | bangalore | F    | 7000000 |   NULL |    1 |
++-----+---------+-----------+------+---------+--------+------+
+8 rows in set (0.000 sec)
+
+MariaDB [company]> desc delocation;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| d_no  | int(11)     | NO   | PRI | NULL    |       |
+| d_loc | varchar(20) | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.099 sec)
+
+MariaDB [company]> insert into delocation values(1,'bangalore');
+Query OK, 1 row affected (0.079 sec)
+
+MariaDB [company]> insert into delocation values(2,'bangalore');
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [company]> insert into delocation values(3,'bangalore');
+Query OK, 1 row affected (0.083 sec)
+
+MariaDB [company]> insert into delocation values(4,'bangalore');
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [company]> insert into delocation values(5,'bangalore');
+Query OK, 1 row affected (0.083 sec)
+
+MariaDB [company]> select * from delocation;
++------+-----------+
+| d_no | d_loc     |
++------+-----------+
+|    1 | bangalore |
+|    2 | bangalore |
+|    3 | bangalore |
+|    4 | bangalore |
+|    5 | bangalore |
++------+-----------+
+5 rows in set (0.000 sec)
+
+MariaDB [company]> desc project;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| p_no   | int(11)     | NO   | PRI | NULL    |       |
+| p_name | varchar(20) | YES  |     | NULL    |       |
+| p_loc  | varchar(20) | YES  |     | NULL    |       |
+| d_no   | int(11)     | YES  | MUL | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.128 sec)
+
+MariaDB [company]> insert into project values(100,'iot','bangalore',5);
+Query OK, 1 row affected (0.037 sec)
+
+MariaDB [company]> insert into project values(101,'dbms','bangalore',5);
+Query OK, 1 row affected (0.082 sec)
+
+MariaDB [company]> insert into project values(102,'web','bangalore',1);
+Query OK, 1 row affected (0.087 sec)
+
+MariaDB [company]> insert into project values(103,'ml','bangalore',1);
+Query OK, 1 row affected (0.080 sec)
+
+MariaDB [company]> insert into project values(104,'networks','bangalore',2);
+Query OK, 1 row affected (0.019 sec)
+
+MariaDB [company]> select * from project;
++------+----------+-----------+------+
+| p_no | p_name   | p_loc     | d_no |
++------+----------+-----------+------+
+|  100 | iot      | bangalore |    5 |
+|  101 | dbms     | bangalore |    5 |
+|  102 | web      | bangalore |    1 |
+|  103 | ml       | bangalore |    1 |
+|  104 | networks | bangalore |    2 |
++------+----------+-----------+------+
+5 rows in set (0.000 sec)
+
+MariaDB [company]> desc works_on;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| ssn   | int(11) | NO   | PRI | NULL    |       |
+| p_no  | int(11) | NO   | PRI | NULL    |       |
+| hrs   | int(11) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+3 rows in set (0.103 sec)
+
+MariaDB [company]> insert into works_on values(10,100,4);
+Query OK, 1 row affected (0.087 sec)
+
+MariaDB [company]> insert into works_on values(10,101,4);
+Query OK, 1 row affected (0.090 sec)
+
+MariaDB [company]> insert into works_on values(11,102,4);
+Query OK, 1 row affected (0.016 sec)
+
+MariaDB [company]> insert into works_on values(12,102,4);
+Query OK, 1 row affected (0.088 sec)
+
+MariaDB [company]> insert into works_on values(13,104,4);
+Query OK, 1 row affected (0.080 sec)
+
+MariaDB [company]> insert into works_on values(14,105,4);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`company`.`works_on`, CONSTRAINT `works_on_ibfk_2` FOREIGN KEY (`p_no`) REFERENCES `project` (`p_no`) ON DELETE CASCADE)
+MariaDB [company]> insert into works_on values(14,103,4);
+Query OK, 1 row affected (0.104 sec)
+
+MariaDB [company]> insert into works_on values(15,103,4);
+Query OK, 1 row affected (0.077 sec)
+
+MariaDB [company]> insert into works_on values(16,103,4);
+Query OK, 1 row affected (0.022 sec)
+
+MariaDB [company]> select * from works_on;
++-----+------+------+
+| ssn | p_no | hrs  |
++-----+------+------+
+|  10 |  100 |    4 |
+|  10 |  101 |    4 |
+|  11 |  102 |    4 |
+|  12 |  102 |    4 |
+|  13 |  104 |    4 |
+|  14 |  103 |    4 |
+|  15 |  103 |    4 |
+|  16 |  103 |    4 |
++-----+------+------+
+8 rows in set (0.000 sec)
+
+MariaDB [company]> select p.p_no from project p,employee e,department d where p.d_no=d.d_no and e.ssn=d.mgssn and e.name='scott'
+    -> union
+    -> select p_no from employee e,works_on w where e.ssn=w.ssn and e.name='scott';
++------+
+| p_no |
++------+
+|  104 |
+|  100 |
+|  101 |
++------+
+3 rows in set (0.001 sec)
+
+MariaDB [company]> select e.name,1.1*e.salary from employee e,project p,works_on w
+    -> where e.ssn=w.ssn and p.p_no=w.p_no and p.p_name='iot';
++-------+--------------+
+| name  | 1.1*e.salary |
++-------+--------------+
+| scott |    7700000.0 |
++-------+--------------+
+1 row in set (0.000 sec)
+
+MariaDB [company]> select sum(e.salary),max(e.salary),min(e.salary),avg(e.salary) from employee e, department d
+    -> where d.d_no=e.d_no and d.d_name='accounts';
++---------------+---------------+---------------+---------------+
+| sum(e.salary) | max(e.salary) | min(e.salary) | avg(e.salary) |
++---------------+---------------+---------------+---------------+
+|      14000000 |       7000000 |       7000000 |  7000000.0000 |
++---------------+---------------+---------------+---------------+
+1 row in set (0.086 sec)
+
+MariaDB [company]> select e.name from employee e where not exists
+    -> (select p_no from project where d_no=5 and p_no not in(select p_no from works_on where ssn=e.ssn));
++-------+
+| name  |
++-------+
+| scott |
++-------+
+
+1 row in set (0.001 sec)
+MariaDB [company]> select e.d_no,count(*) from employee e,department d where e.d_no=d.d_no and e.salary>6000000 and d.d_no in
+    -> (select e1.d_no from employee e1 group by e1.d_no having count(*)>5) group by d.d_no;
++------+----------+
+| d_no | count(*) |
++------+----------+
+|    5 |        6 |
++------+----------+
+1 row in set (0.068 sec)
