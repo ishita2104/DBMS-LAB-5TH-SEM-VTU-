@@ -312,30 +312,18 @@ MariaDB [movies]> select m.title from movie m,caste c
 +-------+
 6 rows in set (0.251 sec)
 
-MariaDB [movies]> select distinct a.act_id from actor a
-    -> join caste c on a.act_id=c.act_id
-    -> join movie m on m.mov_id=c.mov_id
-    -> where m.year not between 2000 and 2015;
+select distinct act_id from actor natural join caste natural join movie where year != 2000
+    -> intersect
+    -> select distinct act_id from actor natural join caste natural join movie where year != 1500;
 +--------+
 | act_id |
 +--------+
 |      1 |
 |      4 |
 |      2 |
+|      3 |
 +--------+
-3 rows in set (0.026 sec)
-			
-				OR
-
-MariaDB [movies]> select distinct act_id from actor natural join caste natural join movie where year not between 2000 and 2015;
-+--------+
-| act_id |
-+--------+
-|      1 |
-|      4 |
-|      2 |
-+--------+
-3 rows in set (0.001 sec)
+4 rows in set (0.073 sec)
 
 MariaDB [movies]>select title,max(star) from movie inner join rating using(mov_id)
     -> group by title having count(star)>0 order by title;
